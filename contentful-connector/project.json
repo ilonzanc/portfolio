@@ -1,0 +1,9 @@
+{
+  "name": "contentful-connector",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "contentful-connector/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project contentful-connector --web",
+  "targets": {}
+}
