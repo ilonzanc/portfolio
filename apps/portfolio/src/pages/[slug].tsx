@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
-import { PageService } from '../../services';
+import { PageService } from '../services';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 
 export default function Page({
-  repo,
+  pageData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const router = useRouter();
-  return <p>Post: {router.query.slug}</p>;
+  return <p>Post: {pageData.title}</p>;
 }
 
 type Repo = {
@@ -15,31 +15,28 @@ type Repo = {
 };
 
 export const getStaticProps = (async (context) => {
-  const res = await fetch('https://api.github.com/repos/vercel/next.js');
-  const repo = await res.json();
-  return { props: { repo } };
+  console.log(context);
+  const pageService = new PageService();
+  const pageData = await pageService.getPageBySlug(context.params.slug);
+  console.log(`pageData for ${context.params.slug}: `, pageData);
+
+  return { props: { pageData } };
 }) satisfies GetStaticProps<{
-  repo: Repo;
+  pageData: Repo;
 }>;
 
 export async function getStaticPaths() {
   const pageService = new PageService();
   // Call an external API endpoint to get posts
-  const response = await pageService.getPageSlugs();
+  const slugs = await pageService.getPageSlugs();
+  // const slugs = await response.json();
 
-  console.log(response);
-
-  const posts = [
-    { id: 123, slug: 'slug-1' },
-    { id: 123, slug: 'slug-2' },
-    { id: 123, slug: 'slug-3' },
-  ];
-
+  console.log(slugs);
   // Get the paths we want to prerender based on posts
   // In production environments, prerender all pages
   // (slower builds, but faster initial page load)
-  const paths = posts.map((post) => ({
-    params: { slug: post.slug },
+  const paths = slugs.map((slug) => ({
+    params: { slug },
   }));
 
   // { fallback: false } means other routes should 404
