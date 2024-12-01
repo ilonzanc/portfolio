@@ -1,12 +1,24 @@
-import { useRouter } from 'next/router';
 import { PageService } from '../services';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
+import { ContentComponentUtil } from '../utils';
 
 export default function Page({
   pageData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const router = useRouter();
-  return <p>Post: {pageData.title}</p>;
+  console.log(pageData.sections);
+  return (
+    <div className="flex justify-between px-4 mx-auto max-w-screen-xl ">
+      <article className="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
+        <header className="mb-4 lg:mb-6 not-format">
+          <h1 className="mb-4 text-3xl font-extrabold leading-tight text-gray-900 lg:mb-6 lg:text-4xl dark:text-white">
+            {pageData.title}
+          </h1>
+          <p>{pageData.intro}</p>
+          {ContentComponentUtil(pageData.sections)}
+        </header>
+      </article>
+    </div>
+  );
 }
 
 type Repo = {
@@ -15,10 +27,8 @@ type Repo = {
 };
 
 export const getStaticProps = (async (context) => {
-  console.log(context);
   const pageService = new PageService();
   const pageData = await pageService.getPageBySlug(context.params.slug);
-  console.log(`pageData for ${context.params.slug}: `, pageData);
 
   return { props: { pageData } };
 }) satisfies GetStaticProps<{
@@ -29,9 +39,7 @@ export async function getStaticPaths() {
   const pageService = new PageService();
   // Call an external API endpoint to get posts
   const slugs = await pageService.getPageSlugs();
-  // const slugs = await response.json();
 
-  console.log(slugs);
   // Get the paths we want to prerender based on posts
   // In production environments, prerender all pages
   // (slower builds, but faster initial page load)
