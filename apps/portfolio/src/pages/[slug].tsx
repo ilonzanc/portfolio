@@ -5,7 +5,6 @@ import { ContentComponentUtil } from '../utils';
 export default function Page({
   pageData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  console.log(pageData.sections);
   return (
     <div className="flex justify-between px-4 mx-auto max-w-screen-xl ">
       <article className="mx-auto w-full max-w-2xl format format-sm sm:format-base lg:format-lg format-blue dark:format-invert">
@@ -14,7 +13,7 @@ export default function Page({
             {pageData.title}
           </h1>
           <p>{pageData.intro}</p>
-          {ContentComponentUtil(pageData.sections)}
+          {pageData.sections && ContentComponentUtil(pageData.sections)}
         </header>
       </article>
     </div>
@@ -23,7 +22,6 @@ export default function Page({
 
 type Repo = {
   name: string;
-  stargazers_count: number;
 };
 
 export const getStaticProps = (async (context) => {

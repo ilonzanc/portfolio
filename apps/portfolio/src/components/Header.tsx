@@ -18,7 +18,7 @@ const { list } = headerStyles();
 
 const Header = () => (
   <header>
-    <Navbar fluid rounded>
+    <Navbar fluid className="bg-blue-100">
       <NavbarBrand as={Link} href="https://flowbite-react.com">
         <img
           src="/favicon.svg"

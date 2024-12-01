@@ -18,11 +18,6 @@ class PageService {
     const contentfulConnector = new ContentfulConnector();
     try {
       const response = await contentfulConnector.getPageBySlug(slug);
-      console.log(
-        'getPageBySlug response content type: ',
-        response.sys.contentType.sys.id
-      );
-      console.log('getPageBySlug response: ', response);
       const pageData = response.fields;
       return pageData;
     } catch (error) {
